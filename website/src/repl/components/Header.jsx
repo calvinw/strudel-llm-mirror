@@ -8,7 +8,7 @@ const { BASE_URL } = import.meta.env;
 const baseNoTrailing = BASE_URL.endsWith('/') ? BASE_URL.slice(0, -1) : BASE_URL;
 
 export function Header({ context, embedded = false }) {
-  const { started, pending, isDirty, activeCode, handleTogglePlay, handleEvaluate, handleShuffle, handleShare } =
+  const { started, pending, isDirty, activeCode, handleTogglePlay, handleEvaluate, handleShuffle, handleShare, mcp } =
     context;
   const isEmbedded = typeof window !== 'undefined' && (embedded || window.location !== window.parent.location);
   const { isZen, isButtonRowHidden, isCSSAnimationDisabled, fontFamily } = useSettings();
@@ -53,6 +53,19 @@ export function Header({ context, embedded = false }) {
             <div className="space-x-2">
               <span className="">strudel</span>
               <span className="text-sm font-medium">REPL</span>
+              {mcp?.isMCPEnabled && (
+                <span className="text-xs font-mono text-blue-400">
+                  MCP:{mcp.sessionId.toUpperCase()}
+                  <span className={cx(
+                    'ml-1',
+                    mcp.connectionStatus === 'connected' ? 'text-green-400' :
+                    mcp.connectionStatus === 'error' ? 'text-red-400' : 'text-yellow-400'
+                  )}>
+                    {mcp.connectionStatus === 'connected' ? '●' :
+                     mcp.connectionStatus === 'error' ? '✕' : '○'}
+                  </span>
+                </span>
+              )}
               {!isEmbedded && isButtonRowHidden && (
                 <a href={`${baseNoTrailing}/learn`} className="text-sm opacity-25 font-medium">
                   DOCS
@@ -117,7 +130,7 @@ export function Header({ context, embedded = false }) {
           {!isEmbedded && (
             <a
               title="learn"
-              href={`${baseNoTrailing}/workshop/getting-started/`}
+              href="/strudel/workshop/getting-started/"
               className={cx('hover:opacity-50 flex items-center space-x-1', !isEmbedded ? 'p-2' : 'px-2')}
             >
               <span>learn</span>

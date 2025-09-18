@@ -20,6 +20,7 @@ import { StrudelMirror, defaultSettings } from '@strudel/codemirror';
 import { clearHydra } from '@strudel/hydra';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { parseBoolean, settingsMap, useSettings } from '../settings.mjs';
+import { useWebSocketMCP } from './useWebSocketMCP';
 import {
   setActivePattern,
   setLatestCode,
@@ -154,6 +155,9 @@ export function useReplContext() {
   const editorRef = useRef();
   const containerRef = useRef();
 
+  // WebSocket MCP integration
+  const mcpState = useWebSocketMCP(editorRef);
+
   // this can be simplified once SettingsTab has been refactored to change codemirrorSettings directly!
   // this will be the case when the main repl is being replaced
   const _settings = useStore(settingsMap, { keys: Object.keys(defaultSettings) });
@@ -229,6 +233,7 @@ export function useReplContext() {
     error,
     editorRef,
     containerRef,
+    mcp: mcpState,
   };
   return context;
 }
