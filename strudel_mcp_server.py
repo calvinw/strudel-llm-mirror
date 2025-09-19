@@ -303,6 +303,227 @@ async def serve_workshop(path: str):
 
     return HTMLResponse(status_code=404)
 
+@app.get("/strudel/tutorial/")
+async def serve_tutorial_root():
+    """Serve tutorial root documentation"""
+    index_file = STATIC_BUILD_DIR / "tutorial" / "index.html"
+    if index_file.exists():
+        return FileResponse(index_file, media_type="text/html")
+    return HTMLResponse(status_code=404)
+
+@app.get("/strudel/tutorial/{path:path}")
+async def serve_tutorial(path: str):
+    """Serve tutorial documentation"""
+    file_path = STATIC_BUILD_DIR / "tutorial" / path
+
+    # If it's a directory, try to serve index.html
+    if file_path.is_dir():
+        index_file = file_path / "index.html"
+        if index_file.exists():
+            return FileResponse(index_file, media_type="text/html")
+
+    # If it's a file, serve it directly
+    if file_path.exists() and file_path.is_file():
+        return FileResponse(file_path)
+
+    return HTMLResponse(status_code=404)
+
+@app.get("/strudel/technical-manual/")
+async def serve_technical_manual_root():
+    """Serve technical manual root documentation"""
+    index_file = STATIC_BUILD_DIR / "technical-manual" / "index.html"
+    if index_file.exists():
+        return FileResponse(index_file, media_type="text/html")
+    return HTMLResponse(status_code=404)
+
+@app.get("/strudel/technical-manual/{path:path}")
+async def serve_technical_manual(path: str):
+    """Serve technical manual documentation"""
+    file_path = STATIC_BUILD_DIR / "technical-manual" / path
+
+    # If it's a directory, try to serve index.html
+    if file_path.is_dir():
+        index_file = file_path / "index.html"
+        if index_file.exists():
+            return FileResponse(index_file, media_type="text/html")
+
+    # If it's a file, serve it directly
+    if file_path.exists() and file_path.is_file():
+        return FileResponse(file_path)
+
+    return HTMLResponse(status_code=404)
+
+@app.get("/strudel/understand/")
+async def serve_understand_root():
+    """Serve understand root documentation"""
+    index_file = STATIC_BUILD_DIR / "understand" / "index.html"
+    if index_file.exists():
+        return FileResponse(index_file, media_type="text/html")
+    return HTMLResponse(status_code=404)
+
+@app.get("/strudel/understand/{path:path}")
+async def serve_understand(path: str):
+    """Serve understand documentation"""
+    file_path = STATIC_BUILD_DIR / "understand" / path
+
+    # If it's a directory, try to serve index.html
+    if file_path.is_dir():
+        index_file = file_path / "index.html"
+        if index_file.exists():
+            return FileResponse(index_file, media_type="text/html")
+
+    # If it's a file, serve it directly
+    if file_path.exists() and file_path.is_file():
+        return FileResponse(file_path)
+
+    return HTMLResponse(status_code=404)
+
+@app.get("/strudel/de/")
+async def serve_de_root():
+    """Serve German documentation root"""
+    index_file = STATIC_BUILD_DIR / "de" / "index.html"
+    if index_file.exists():
+        return FileResponse(index_file, media_type="text/html")
+    return HTMLResponse(status_code=404)
+
+@app.get("/strudel/de/{path:path}")
+async def serve_de(path: str):
+    """Serve German documentation"""
+    file_path = STATIC_BUILD_DIR / "de" / path
+
+    # If it's a directory, try to serve index.html
+    if file_path.is_dir():
+        index_file = file_path / "index.html"
+        if index_file.exists():
+            return FileResponse(index_file, media_type="text/html")
+
+    # If it's a file, serve it directly
+    if file_path.exists() and file_path.is_file():
+        return FileResponse(file_path)
+
+    return HTMLResponse(status_code=404)
+
+# Root-level documentation routes (for navigation links in docs)
+@app.get("/workshop/")
+async def serve_workshop_root_direct():
+    """Serve workshop root documentation at root level"""
+    index_file = STATIC_BUILD_DIR / "workshop" / "index.html"
+    if index_file.exists():
+        return FileResponse(index_file, media_type="text/html")
+    return HTMLResponse(status_code=404)
+
+@app.get("/workshop/{path:path}")
+async def serve_workshop_direct(path: str):
+    """Serve workshop documentation at root level"""
+    file_path = STATIC_BUILD_DIR / "workshop" / path
+    if file_path.is_dir():
+        index_file = file_path / "index.html"
+        if index_file.exists():
+            return FileResponse(index_file, media_type="text/html")
+    if file_path.exists() and file_path.is_file():
+        return FileResponse(file_path)
+    return HTMLResponse(status_code=404)
+
+@app.get("/learn/")
+async def serve_learn_root_direct():
+    """Serve learn root documentation at root level"""
+    index_file = STATIC_BUILD_DIR / "learn" / "index.html"
+    if index_file.exists():
+        return FileResponse(index_file, media_type="text/html")
+    return HTMLResponse(status_code=404)
+
+@app.get("/learn/{path:path}")
+async def serve_learn_direct(path: str):
+    """Serve learn documentation at root level"""
+    file_path = STATIC_BUILD_DIR / "learn" / path
+    if file_path.is_dir():
+        index_file = file_path / "index.html"
+        if index_file.exists():
+            return FileResponse(index_file, media_type="text/html")
+    if file_path.exists() and file_path.is_file():
+        return FileResponse(file_path)
+    return HTMLResponse(status_code=404)
+
+@app.get("/tutorial/")
+async def serve_tutorial_root_direct():
+    """Serve tutorial root documentation at root level"""
+    index_file = STATIC_BUILD_DIR / "tutorial" / "index.html"
+    if index_file.exists():
+        return FileResponse(index_file, media_type="text/html")
+    return HTMLResponse(status_code=404)
+
+@app.get("/tutorial/{path:path}")
+async def serve_tutorial_direct(path: str):
+    """Serve tutorial documentation at root level"""
+    file_path = STATIC_BUILD_DIR / "tutorial" / path
+    if file_path.is_dir():
+        index_file = file_path / "index.html"
+        if index_file.exists():
+            return FileResponse(index_file, media_type="text/html")
+    if file_path.exists() and file_path.is_file():
+        return FileResponse(file_path)
+    return HTMLResponse(status_code=404)
+
+@app.get("/technical-manual/")
+async def serve_technical_manual_root_direct():
+    """Serve technical manual root documentation at root level"""
+    index_file = STATIC_BUILD_DIR / "technical-manual" / "index.html"
+    if index_file.exists():
+        return FileResponse(index_file, media_type="text/html")
+    return HTMLResponse(status_code=404)
+
+@app.get("/technical-manual/{path:path}")
+async def serve_technical_manual_direct(path: str):
+    """Serve technical manual documentation at root level"""
+    file_path = STATIC_BUILD_DIR / "technical-manual" / path
+    if file_path.is_dir():
+        index_file = file_path / "index.html"
+        if index_file.exists():
+            return FileResponse(index_file, media_type="text/html")
+    if file_path.exists() and file_path.is_file():
+        return FileResponse(file_path)
+    return HTMLResponse(status_code=404)
+
+@app.get("/understand/")
+async def serve_understand_root_direct():
+    """Serve understand root documentation at root level"""
+    index_file = STATIC_BUILD_DIR / "understand" / "index.html"
+    if index_file.exists():
+        return FileResponse(index_file, media_type="text/html")
+    return HTMLResponse(status_code=404)
+
+@app.get("/understand/{path:path}")
+async def serve_understand_direct(path: str):
+    """Serve understand documentation at root level"""
+    file_path = STATIC_BUILD_DIR / "understand" / path
+    if file_path.is_dir():
+        index_file = file_path / "index.html"
+        if index_file.exists():
+            return FileResponse(index_file, media_type="text/html")
+    if file_path.exists() and file_path.is_file():
+        return FileResponse(file_path)
+    return HTMLResponse(status_code=404)
+
+@app.get("/de/")
+async def serve_de_root_direct():
+    """Serve German documentation root at root level"""
+    index_file = STATIC_BUILD_DIR / "de" / "index.html"
+    if index_file.exists():
+        return FileResponse(index_file, media_type="text/html")
+    return HTMLResponse(status_code=404)
+
+@app.get("/de/{path:path}")
+async def serve_de_direct(path: str):
+    """Serve German documentation at root level"""
+    file_path = STATIC_BUILD_DIR / "de" / path
+    if file_path.is_dir():
+        index_file = file_path / "index.html"
+        if index_file.exists():
+            return FileResponse(index_file, media_type="text/html")
+    if file_path.exists() and file_path.is_file():
+        return FileResponse(file_path)
+    return HTMLResponse(status_code=404)
+
 # Mount static assets at root level for assets referenced by the HTML
 app.mount("/_astro", StaticFiles(directory=str(STATIC_BUILD_DIR / "_astro")), name="astro_assets")
 app.mount("/static", StaticFiles(directory=str(STATIC_BUILD_DIR)), name="static_assets")

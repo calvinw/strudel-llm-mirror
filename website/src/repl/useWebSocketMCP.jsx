@@ -88,12 +88,35 @@ export function useWebSocketMCP(editorRef) {
   };
 
   const sendCurrentCodeToServer = (requestId) => {
+    console.log('🔍 sendCurrentCodeToServer called with requestId:', requestId);
+    console.log('🔍 editorRef.current:', editorRef.current);
+
     if (!editorRef.current) {
-      console.error('Editor not ready for code retrieval');
+      console.error('❌ Editor not ready for code retrieval');
+      // Send error response instead of just returning
+      if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
+        const errorMessage = {
+          type: 'current-code-response',
+          request_id: requestId,
+          code: '// Error: Editor not ready',
+          timestamp: Date.now()
+        };
+        wsRef.current.send(JSON.stringify(errorMessage));
+        console.log('📤 Sent error response to MCP server');
+      }
       return;
     }
 
-    const currentCode = editorRef.current.getCode() || '// No code in editor';
+    console.log('🔍 editorRef.current.getCode:', typeof editorRef.current.getCode);
+
+    let currentCode;
+    try {
+      currentCode = editorRef.current.code || '// No code in editor';
+      console.log('🔍 Retrieved code length:', currentCode.length);
+    } catch (error) {
+      console.error('❌ Error getting code from editor:', error);
+      currentCode = '// Error: Could not retrieve code';
+    }
 
     if (wsRef.current && wsRef.current.readyState === WebSocket.OPEN) {
       const message = {
@@ -103,10 +126,12 @@ export function useWebSocketMCP(editorRef) {
         timestamp: Date.now()
       };
 
+      console.log('🔍 About to send message:', message);
       wsRef.current.send(JSON.stringify(message));
       console.log(`📤 Sent current code to MCP server (${currentCode.length} chars)`);
     } else {
-      console.error('WebSocket not connected - cannot send code');
+      console.error('❌ WebSocket not connected - cannot send code');
+      console.log('🔍 WebSocket state:', wsRef.current?.readyState);
     }
   };
 
@@ -139,7 +164,7 @@ export function useWebSocketMCP(editorRef) {
         },
         play: () => editorRef.current.evaluate(),
         stop: () => editorRef.current.stop(),
-        getCode: () => editorRef.current.getCode(),
+        getCode: () => editorRef.current.code,
         sessionId,
         connectionStatus
       };

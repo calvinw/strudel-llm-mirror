@@ -54,8 +54,8 @@ export function Header({ context, embedded = false }) {
               <span className="">strudel</span>
               <span className="text-sm font-medium">REPL</span>
               {mcp?.isMCPEnabled && (
-                <span className="text-xs font-mono text-blue-400">
-                  MCP:{mcp.sessionId.toUpperCase()}
+                <span className="text-lg font-mono text-blue-400 select-text">
+                  session_id: {mcp.sessionId}
                   <span className={cx(
                     'ml-1',
                     mcp.connectionStatus === 'connected' ? 'text-green-400' :
@@ -130,7 +130,7 @@ export function Header({ context, embedded = false }) {
           {!isEmbedded && (
             <a
               title="learn"
-              href="/strudel/workshop/getting-started/"
+              href="/workshop/getting-started/"
               className={cx('hover:opacity-50 flex items-center space-x-1', !isEmbedded ? 'p-2' : 'px-2')}
             >
               <span>learn</span>
