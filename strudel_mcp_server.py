@@ -114,8 +114,6 @@ app.add_middleware(
 # Define static build directory
 STATIC_BUILD_DIR = Path(__file__).parent / "website" / "dist"
 
-# OAuth metadata endpoint
-@app.get("/.well-known/oauth-authorization-server")
 async def oauth_metadata(request: Request):
     base_url = str(request.base_url).rstrip("/")
     return JSONResponse({
@@ -527,6 +525,9 @@ async def serve_de_direct(path: str):
 # Mount static assets at root level for assets referenced by the HTML
 app.mount("/_astro", StaticFiles(directory=str(STATIC_BUILD_DIR / "_astro")), name="astro_assets")
 app.mount("/static", StaticFiles(directory=str(STATIC_BUILD_DIR)), name="static_assets")
+
+# Add the OAuth metadata route before mounting
+app.add_api_route("/.well-known/oauth-authorization-server", oauth_metadata, methods=["GET"])
 
 # Mount MCP server at root (must be last)
 app.mount("/", mcp_app)
