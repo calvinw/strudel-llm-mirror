@@ -1,21 +1,63 @@
-FROM node:24
+# Production Dockerfile for Strudel
+# Multi-stage build to optimize image size and security
 
+# Stage 1: Build stage
+FROM node:24-alpine AS builder
+
+# Set working directory
 WORKDIR /app
 
-RUN npm install pnpm --global
+# Install pnpm globally
+RUN npm install -g pnpm
 
+# Copy package files
 COPY pnpm-workspace.yaml ./
 COPY package.json pnpm-lock.yaml ./
 COPY packages/ ./packages/
 COPY examples/ ./examples/
-RUN mkdir -p website/public
 COPY website/package.json ./website/
 
-RUN pnpm install
+# Install dependencies
+RUN pnpm install --frozen-lockfile
 
-
+# Copy source code
 COPY . .
 
-EXPOSE 4321
+# Build for production
+RUN pnpm build
 
-CMD ["pnpm", "dev"]
+# Stage 2: Production stage
+FROM python:3.11-slim AS production
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    gcc \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create app directory
+WORKDIR /app
+
+# Copy Python requirements and install
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Copy built files from builder stage
+COPY --from=builder /app/website/dist ./website/dist
+
+# Copy Python server files
+COPY --from=builder /app/strudel_mcp_server.py .
+COPY --from=builder /app/strudel_mcp_tools.py .
+
+# Create non-root user for security
+RUN adduser --system --uid 1001 strudel
+RUN chown -R strudel:strudel /app || true
+USER strudel
+
+# Expose port
+EXPOSE 8080
+
+# Set environment to production
+ENV NODE_ENV=production
+
+# Run the FastAPI server
+CMD ["python", "strudel_mcp_server.py"]
