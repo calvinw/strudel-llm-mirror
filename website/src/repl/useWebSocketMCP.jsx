@@ -18,13 +18,8 @@ export function useWebSocketMCP(editorRef) {
 
   // WebSocket connection
   const connectWebSocket = () => {
-    // Only connect if we detect we're on the MCP server port (8080) or Docker port (8000)
-    const isMCPServer = window.location.port === '8080' || window.location.port === '8000' ||
-                        window.location.host.includes('8080') || window.location.host.includes('8000');
-    if (!isMCPServer) {
-      console.log('🔍 Not on MCP server, skipping WebSocket connection');
-      return;
-    }
+    // Always connect to MCP WebSocket for this LLM fork
+    console.log('🔍 Initializing MCP WebSocket connection...');
 
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
     const wsUrl = `${protocol}//${window.location.host}/strudel/ws?session_id=${sessionId}`;
@@ -174,7 +169,6 @@ export function useWebSocketMCP(editorRef) {
   return {
     sessionId,
     connectionStatus,
-    isMCPEnabled: window.location.port === '8080' || window.location.port === '8000' ||
-                 window.location.host.includes('8080') || window.location.host.includes('8000')
+    isMCPEnabled: true  // Always enabled for this LLM fork
   };
 }
